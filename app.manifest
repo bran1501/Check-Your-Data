@@ -4,12 +4,12 @@
     "title": "Data Health Check",
     "id": {
       "group": null,
-      "name": "Data-Health-Check-main",
+      "name": "Data-Health-Check",
       "version": "1.0.0"
     },
     "author": [
       {
-        "name": "Christhian Bran(bran1501@gmail.com)",
+        "name": "splunkbase@prudentconsulting.com",
         "email": null,
         "company": null
       }
