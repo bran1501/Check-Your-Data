@@ -1,4 +1,4 @@
-# Data-Health-Check
+# Check-Your-Data
 Instructions
 Prerequisites
 None
