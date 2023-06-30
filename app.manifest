@@ -1,7 +1,7 @@
 {
   "schemaVersion": "2.0.0",
   "info": {
-    "title": "Data Health Check",
+    "title": "Check Your Data",
     "id": {
       "group": null,
       "name": "Data-Health-Check",
