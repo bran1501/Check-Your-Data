@@ -180,7 +180,7 @@ index=_internal source=*splunkd.log* log_level IN (ERROR,WARN) component IN (Agg
                 <drilldown>
           <set token="min_delay">$click.value$</set>
           <link target="_blank">search?q=index=$index$ sourcetype=$sourcetype$| fields _raw _indextime _time host source | eval delay_hrs=round((_indextime-_time)/60/60,2), eval indextime=_indextime 
-| convert ctime(_indextime) as indextime | search delay_hrs="$min_delay$" | table _raw source host _time&amp;earliest=$time.earliest$&amp;latest=$time.latest$&amp;form.click=$min_delay$</link>
+| convert ctime(_indextime) as indextime | search delay_hrs="$min_delay$" | table _raw source host _time indextime&amp;earliest=$time.earliest$&amp;latest=$time.latest$&amp;form.click=$min_delay$</link>
         </drilldown>
       </table>
     </panel>
