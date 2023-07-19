@@ -3,7 +3,7 @@
   <view name="data_quality"  default="true"/>
   </collection>
 <collection label="Event Parser">
-  <view name="event_parser"/>
+  <view name="data_parser"/>
   </collection>
 <collection label="Others">
   <view name="search" />
