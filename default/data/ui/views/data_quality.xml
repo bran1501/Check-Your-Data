@@ -1,4 +1,7 @@
 <form version="1.1">
+<init>
+  <set token="review"></set>
+</init>
   <!-- BASE SEARCHES -->
   <label>Data Quality Overview</label>
   <search id="base1">
@@ -48,9 +51,25 @@ index=_internal source=*splunkd.log* log_level IN (ERROR,WARN) component IN (Agg
       </search>
       <fieldForLabel>index</fieldForLabel>
       <fieldForValue>index</fieldForValue>
-    </input>
+   </input>
+ <!--<input type="link" token="review">
+        <label>Full Review</label>
+        <choice value="Full Review">Click</choice>
+        <change>
+          <set token="review"></set>
+          <set token="partial_review"></set>
+        </change>
+     </input> 
+       <input type="link" token="partial_review">
+        <label>Partial Review (Only Errors)</label>
+        <choice value="Partial Review">Click</choice>
+        <change>
+           <unset token="review"></unset>
+
+        </change>
+      </input> -->
   </fieldset>
-  <row>
+  <row depends="$review$">
     <panel>
       <title>Sourcetypes by Hosts and their type</title>
       <html>
@@ -87,22 +106,19 @@ index=_internal source=*splunkd.log* log_level IN (ERROR,WARN) component IN (Agg
       </table>
     </panel>
     <panel>
-                      <html>
+      <html>
           <pre>Click for a BTOOL</pre>
           
         </html>
       <table>
-
         <title>Apps</title>
         <search>
-          
           <query>| rest splunk_server=local /servicesNS/-/-/configs/conf-props/$sourcetype|h$ |fields eai:appName |dedup eai:appName</query>
           <earliest>-24h@h</earliest>
           <latest>now</latest>
         </search>
-        
         <option name="refresh.display">progressbar</option>
-                <option name="drilldown">cell</option>
+        <option name="drilldown">cell</option>
         <drilldown>
           <link target="_blank">search?q=%7Cbtool%20props%20list%20$sourcetype$&amp;earliest=$time.earliest$&amp;latest=$time.latest$&amp;form.click=$BREAKER$</link>
         </drilldown>
@@ -174,20 +190,20 @@ index=_internal source=*splunkd.log* log_level IN (ERROR,WARN) component IN (Agg
         <search base="main">
           <query>|stats max(delay_hrs) as delay_hrs</query>
         </search>
-                <drilldown>
+        <drilldown>
           <set token="max_delay">$click.value$</set>
           <link target="_blank">search?q=index=$index$ sourcetype=$sourcetype$| fields _raw _indextime _time host source | eval delay_hrs=round((_indextime-_time)/60/60,2), eval indextime=_indextime 
 | convert ctime(_indextime) as indextime | search delay_hrs="$max_delay$" | table _raw source host _time indextime&amp;earliest=$time.earliest$&amp;latest=$time.latest$&amp;form.click=$max_delay$</link>
         </drilldown>
       </table>
     </panel>
-        <panel depends="$index$">
+    <panel depends="$index$">
       <table>
         <title>Delay Min</title>
         <search base="main">
           <query>|stats min(delay_hrs) as delay_hrs</query>
         </search>
-                <drilldown>
+        <drilldown>
           <set token="min_delay">$click.value$</set>
           <link target="_blank">search?q=index=$index$ sourcetype=$sourcetype$| fields _raw _indextime _time host source | eval delay_hrs=round((_indextime-_time)/60/60,2), eval indextime=_indextime 
 | convert ctime(_indextime) as indextime | search delay_hrs="$min_delay$" | table _raw source host _time indextime&amp;earliest=$time.earliest$&amp;latest=$time.latest$&amp;form.click=$min_delay$</link>
@@ -195,7 +211,7 @@ index=_internal source=*splunkd.log* log_level IN (ERROR,WARN) component IN (Agg
       </table>
     </panel>
   </row>
-  <row>
+  <row depends="$review$">
     <panel depends="$index$">
       <table>
         <title>Sample Events</title>
@@ -213,7 +229,7 @@ index=_internal source=*splunkd.log* log_level IN (ERROR,WARN) component IN (Agg
       </table>
     </panel>
   </row>
-  <row>
+  <row depends="$review$">
     <panel depends="$index$">
       <input type="dropdown" token="time_index" searchWhenChanged="true">
         <label>Time Range Picker(indextime)</label>
@@ -236,7 +252,7 @@ index=_internal source=*splunkd.log* log_level IN (ERROR,WARN) component IN (Agg
       </event>
     </panel>
   </row>
-  <row>
+  <row depends="$partial_review$">
     <panel>
       <table>
         <title>Issues of sourcetype</title>
@@ -259,8 +275,18 @@ index=_internal source=*splunkd.log* log_level IN (ERROR,WARN) component IN (Agg
       </table>
     </panel>
   </row>
-  <row>
+  <row depends="$partial_review$">
     <panel>
+      <single>
+        <title>Coming from:</title>
+        <search base="base1">
+          <query>|search data_sourcetype=$sourcetype$ component=LineBreakingProcessor 
+          | fields host | table host 
+          | eval host = if( match(host,"splunkcloud.com"),"SPLUNK CLOUD",host)
+          |stats values(host) as host</query>
+        </search>
+        <option name="refresh.display">progressbar</option>
+      </single>
       <table>
         <title>Line Breaking Issues</title>
         <search base="base1">
@@ -270,6 +296,16 @@ index=_internal source=*splunkd.log* log_level IN (ERROR,WARN) component IN (Agg
       </table>
     </panel>
     <panel>
+      <single>
+        <title>Coming from:</title>
+        <search base="base1">
+          <query>|search data_sourcetype=$sourcetype$ component=DateParserVerbose 
+          | fields host | table host 
+          | eval host = if( match(host,"splunkcloud.com"),"SPLUNK CLOUD",host)
+          |stats values(host) as host</query>
+        </search>
+        <option name="refresh.display">progressbar</option>
+      </single>
       <table>
         <title>Data Parser Issues</title>
         <search base="base1">
@@ -279,6 +315,17 @@ index=_internal source=*splunkd.log* log_level IN (ERROR,WARN) component IN (Agg
       </table>
     </panel>
     <panel>
+      <single>
+        <title>Coming from:</title>
+        <search base="base1">
+          <query>|search data_sourcetype=$sourcetype$ component=AggregatorMiningProcessor 
+          | fields host | table host 
+          | eval host = if( match(host,"splunkcloud.com"),"SPLUNK CLOUD",host)
+          |stats values(host) as host
+          </query>
+        </search>
+        <option name="refresh.display">progressbar</option>
+      </single>
       <table>
         <title>Aggregator Issues</title>
         <search base="base1">
@@ -288,7 +335,7 @@ index=_internal source=*splunkd.log* log_level IN (ERROR,WARN) component IN (Agg
       </table>
     </panel>
   </row>
-  <row>
+  <row depends="$partial_review$">
     <panel>
       <single>
         <title>Max Length of Line Breaking error</title>
