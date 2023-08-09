@@ -1,6 +1,8 @@
 # Check-Your-Data
-#Instructions
-#Prerequisites
+Instructions
+
+Prerequisites
+
 Install https://splunkbase.splunk.com/app/6368
 
 Install
