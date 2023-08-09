@@ -1,7 +1,7 @@
 # Check-Your-Data
 Instructions
 Prerequisites
-None
+Install https://splunkbase.splunk.com/app/6368
 
 Install
 This app should be installed on Search Heads https://docs.splunk.com/Documentation/SplunkCloud/latest/Admin/Experience Install the app. For Splunk Cloud, refer to Install apps in your Splunk Cloud deployment. For customer managed deployments, refer to the standard methods for Splunk Add-on installs as documented for a Single Server Install or a Distributed Environment Install.
