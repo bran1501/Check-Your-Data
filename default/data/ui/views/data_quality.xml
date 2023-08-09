@@ -87,15 +87,25 @@ index=_internal source=*splunkd.log* log_level IN (ERROR,WARN) component IN (Agg
       </table>
     </panel>
     <panel>
+                      <html>
+          <pre>Click for a BTOOL</pre>
+          
+        </html>
       <table>
+
         <title>Apps</title>
         <search>
+          
           <query>| rest splunk_server=local /servicesNS/-/-/configs/conf-props/$sourcetype|h$ |fields eai:appName |dedup eai:appName</query>
           <earliest>-24h@h</earliest>
           <latest>now</latest>
         </search>
-        <option name="drilldown">none</option>
+        
         <option name="refresh.display">progressbar</option>
+                <option name="drilldown">cell</option>
+        <drilldown>
+          <link target="_blank">search?q=%7Cbtool%20props%20list%20$sourcetype$&amp;earliest=$time.earliest$&amp;latest=$time.latest$&amp;form.click=$BREAKER$</link>
+        </drilldown>
       </table>
     </panel>
     <panel depends="$index$">
