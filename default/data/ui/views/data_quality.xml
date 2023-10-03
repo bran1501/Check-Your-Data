@@ -1,7 +1,4 @@
 <form version="1.1">
-<init>
-  <set token="review"></set>
-</init>
   <!-- BASE SEARCHES -->
   <label>Data Quality Overview</label>
   <search id="base1">
@@ -52,24 +49,8 @@ index=_internal source=*splunkd.log* log_level IN (ERROR,WARN) component IN (Agg
       <fieldForLabel>index</fieldForLabel>
       <fieldForValue>index</fieldForValue>
    </input>
- <!--<input type="link" token="review">
-        <label>Full Review</label>
-        <choice value="Full Review">Click</choice>
-        <change>
-          <set token="review"></set>
-          <set token="partial_review"></set>
-        </change>
-     </input> 
-       <input type="link" token="partial_review">
-        <label>Partial Review (Only Errors)</label>
-        <choice value="Partial Review">Click</choice>
-        <change>
-           <unset token="review"></unset>
-
-        </change>
-      </input> -->
   </fieldset>
-  <row depends="$review$">
+  <row>
     <panel>
       <title>Sourcetypes by Hosts and their type</title>
       <html>
@@ -211,7 +192,7 @@ index=_internal source=*splunkd.log* log_level IN (ERROR,WARN) component IN (Agg
       </table>
     </panel>
   </row>
-  <row depends="$review$">
+  <row>
     <panel depends="$index$">
       <table>
         <title>Sample Events</title>
@@ -229,7 +210,7 @@ index=_internal source=*splunkd.log* log_level IN (ERROR,WARN) component IN (Agg
       </table>
     </panel>
   </row>
-  <row depends="$review$">
+  <row>
     <panel depends="$index$">
       <input type="dropdown" token="time_index" searchWhenChanged="true">
         <label>Time Range Picker(indextime)</label>
@@ -252,7 +233,7 @@ index=_internal source=*splunkd.log* log_level IN (ERROR,WARN) component IN (Agg
       </event>
     </panel>
   </row>
-  <row depends="$partial_review$">
+  <row>
     <panel>
       <table>
         <title>Issues of sourcetype</title>
@@ -275,7 +256,7 @@ index=_internal source=*splunkd.log* log_level IN (ERROR,WARN) component IN (Agg
       </table>
     </panel>
   </row>
-  <row depends="$partial_review$">
+  <row>
     <panel>
       <single>
         <title>Coming from:</title>
@@ -335,7 +316,7 @@ index=_internal source=*splunkd.log* log_level IN (ERROR,WARN) component IN (Agg
       </table>
     </panel>
   </row>
-  <row depends="$partial_review$">
+  <row>
     <panel>
       <single>
         <title>Max Length of Line Breaking error</title>
